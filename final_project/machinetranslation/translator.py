@@ -1,16 +1,16 @@
-import json
+"""
+Converts English to French and French to English
+"""
+import os
 from ibm_watson import LanguageTranslatorV3
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
 apikey = os.environ['API_KEY']
 url = os.environ['API_URL']
-
-from ibm_watson import LanguageTranslatorV3
-from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
 authenticator = IAMAuthenticator(apikey)
 language_translator = LanguageTranslatorV3(
@@ -20,22 +20,21 @@ language_translator = LanguageTranslatorV3(
 
 language_translator.set_service_url(url)
 
-def englishToFrench(englishText):
-    #write the code here
+def english_to_french(english_text):
+    """translates the english text to french text."""
     translation = language_translator.translate(
-    englishText,
+    english_text,
     model_id='en-fr').get_result()
-    result = dict(json.dumps(translation, indent=2, ensure_ascii=False))
-    #result = json.dumps(translation, indent=2, ensure_ascii=False)
-    print(result)
-    return translation["translations"]["translation"]
+    translation = dict(translation)
+    french_text = translation["translations"][0]["translation"]
+    return french_text
 
 
-def frenchToEnglish(frenchText):
-    #write the code here
+def french_to_english(french_text):
+    """translates the french text to english text."""
     translation = language_translator.translate(
-    frenchText,
+    french_text,
     model_id='fr-en').get_result()
-    result = dict(json.dumps(translation, indent=2, ensure_ascii=False))
-    print(result)
-    return translation["translations"]["translation"]
+    translation = dict(translation)
+    english_text = translation["translations"][0]["translation"]
+    return english_text
